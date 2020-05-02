@@ -1,0 +1,33 @@
+@import'./normalize.css';
+body{
+  padding:0px;
+  margin:0px;
+}
+div{
+  padding: 0;
+  margin: 0;
+}
+#tab-bar{
+  display:flex;
+  background:#f2f2f2;
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+   box-shadow:0 -1px 1px rgba(	105,105,105,.8);
+   font-size: 14px;
+}
+.tab-bar-item{
+  flex:1;
+  height:49px;
+  text-align:center;
+}
+.tab-bar-item img{
+  height: 24px;
+  width: 24px;
+  vertical-align: middle;
+ 
+  /* float: left;
+  padding: 0;
+  margin: 0; */
+}
