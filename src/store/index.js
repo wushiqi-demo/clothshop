@@ -5,14 +5,16 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    cartList: []
+    cartList: [],
+    cartLength: 0,
   },
   mutations: {
     addCounter(state, playLoad) {
       playLoad.counter++
+      state.cartLength++
     },
     addtoCartList(state, playLoad) {
-      playLoad.checked = true//凡是进行状态更改的时候一定要在mutation中更改
+      playLoad.checked = true //凡是进行状态更改的时候一定要在mutation中更改
       state.cartList.push(playLoad)
       console.log(state.cartList);
     },
@@ -20,25 +22,25 @@ export default new Vuex.Store({
   },
   actions: {
     addtoCartList(context, playLoad) {
-      // state.cartList.push(playLoad)
-      // console.log( state.cartList);
       ///在开发里面mutations只进行单一的操作
-      let oldProduct = context.state.cartList.find(item => item.iid == playLoad.iid)
-
-      if (oldProduct) {
-        context.commit('addCounter', oldProduct)
-        // oldProduct.counter += 1;
-        // oldProduct.title = '这个属性已经被更改'
-      } else {
-        // state.cartList.push(playLoad)//这个事件放到mutation里面执行
-        context.commit('addtoCartList', playLoad)
-      }
-
+      return new Promise((resolve, reject)=>{
+        let oldProduct = context.state.cartList.find(item => item.iid == playLoad.iid)
+        if (oldProduct) {
+          context.commit('addCounter', oldProduct)
+          resolve('商品的数量+1')
+        } else {
+          context.commit('addtoCartList', playLoad)
+          resolve('添加商品成功')
+        }
+      }) 
+        
+      
     }
   },
   getters: {
-    cartListLength: state => state.cartList.length,
+    cartListLength: state => state.cartList.length + state.cartLength,
     cartListGet: state => state.cartList,
+    cartChecked: state => state.cartList.filter(item => item.checked == true)
   },
   modules: {}
 })

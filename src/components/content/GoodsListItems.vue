@@ -31,8 +31,7 @@ export default {
       //   this.$bus.$emit("recommendImageLoad");
       // }
       //时间总线很重要，这个可以和向父组件发送请求不同，他可以往全局发送时间
-       this.$bus.$emit("goodsItemsImageLoad");//可以分别在首页，详情页处理，不用改动封装好的组件。让组件的实用性更强
-     
+      this.$bus.$emit("goodsItemsImageLoad"); //可以分别在首页，详情页处理，不用改动封装好的组件。让组件的实用性更强
     },
     detailClick() {
       this.$router.push("/detail/" + this.goodsitems.iid);
@@ -40,7 +39,12 @@ export default {
   },
   computed: {
     showImage() {
-      return this.goodsitems.image || this.goodsitems.show.img; //||是或的逻辑关系，如果前面的为空，去后面的值
+      if (this.goodsitems.image) {
+        return this.goodsitems.image;
+      } else {
+        return this.goodsitems.show.img;
+      }
+      // return this.goodsitems.image || this.goodsitems.show.img; //||是或的逻辑关系，如果前面的为空，去后面的值
     }
   }
 };

@@ -1,26 +1,32 @@
 <template>
   <div id="cart">
     <NavBar>
-      <div class="nav-home" slot="center">购物车({{$store.getters.cartListLength}})</div>
+      <div class="nav-home" slot="center">
+        购物车(<span>{{cartLength}}</span>)
+      </div>
     </NavBar>
-    <cartItem/>
+    <cartItem />
+    <cartBar />
   </div>
 </template>
 <script>
 import NavBar from "components/common/navbar/NavBar.vue";
-import cartItem from './cartChildren/cartItem'
+import cartItem from "./cartChildren/cartItem";
+import { mapGetters } from "vuex";
+import cartBar from "./cartChildren/cartBar";
 export default {
   name: "Cart",
   data() {
-    return {
-      
-    };
+    return {};
   },
   components: {
     NavBar,
     cartItem,
+    cartBar
   },
-
+  computed: {
+    ...mapGetters({ cartLength: "cartListLength" })
+  },
   methods: {}
 };
 </script>

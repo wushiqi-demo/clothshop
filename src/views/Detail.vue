@@ -13,6 +13,7 @@
     </scroll>
     <detailButtonBar @addtoCart="addtoCart" />
     <backTop @click.native="backTopClick" v-show="isShow" />
+    <Toast :message="message" :show="show" />
   </div>
 </template>
 
@@ -28,6 +29,7 @@ import detailComment from "./detailchildren/detailComment";
 import detailButtonBar from "./detailchildren/detailButtonBar";
 
 import scroll from "components/common/scroll/Scroll.vue";
+import Toast from "components/common/toast/Toast.vue";
 
 import GoodsList from "components/content/GoodsList";
 
@@ -35,6 +37,8 @@ import { getDetail, Shop, goodsInfo, goodsParams } from "network/detail.js";
 import { getRecommend } from "network/recommend.js";
 import { debounce } from "common/debounce.js";
 import { backTopMix } from "common/mixIn.js";
+
+import { mapActions } from "vuex";
 export default {
   name: "Detail",
   mixins: [backTopMix],
@@ -52,6 +56,8 @@ export default {
       themeTopY: [],
       getScrollY: null,
       counter: 1,
+      show: false,
+      message: ""
     };
   },
   components: {
@@ -64,10 +70,10 @@ export default {
     detailParam,
     detailComment,
     GoodsList,
-    detailButtonBar
+    detailButtonBar,
+    Toast
   },
   created() {
-    // console.log(this.$route.params.iid);
     this.iid = this.$route.params.iid;
     //拿出相关的详情页的数据
     getDetail(this.iid).then(res => {
@@ -93,7 +99,6 @@ export default {
     //拿评论页的数据
     getRecommend().then(res => {
       this.recommends = res.data.list;
-      console.log(this.recommends);
     });
   },
   deactivated() {
@@ -105,9 +110,10 @@ export default {
     this.imgeLoadListener = () => {
       refresh(); //刷新，防止图片异步加载过来的时候，滚动的长度不会刷新改变的问题
     };
-    this.$bus.$on("goodsItemsImageLoad", this.imgeLoadListener);
+    this.$bus.$on("goodsItemsImageLoad", this.imgeLoadListener); //监听的函数后，第二个参数是处理函数
   },
   methods: {
+    ...mapActions({ addtoCartList: "addtoCartList" }),
     loadClick() {
       this.$refs.scroll.refresh();
       this.getScrollY();
@@ -125,7 +131,6 @@ export default {
       for (let key = 0; key < this.themeTopY.length; key++) {
         let themeTopY = this.themeTopY;
         const length = themeTopY.length;
-        // let currentIndex = this.$refs.title.currentIndex
         if (
           themeTopY[key] < -pops.y &&
           -pops.y < themeTopY[key + 1] &&
@@ -146,7 +151,14 @@ export default {
       product.image = this.topImage[0];
       product.counter = this.counter;
       // this.$store.cartList.push(product),这种做法不太推荐，在使用vuex时 ，使用mutations来改变state中的值
-      this.$store.dispatch("addtoCartList", product);
+      // this.$store.dispatch("addtoCartList", product);
+      this.addtoCartList(product).then(res => {
+        this.message = res;
+        this.show = true;
+        setTimeout(() => {
+          this.show = false;
+        }, 1500);
+      });
     }
   }
 };

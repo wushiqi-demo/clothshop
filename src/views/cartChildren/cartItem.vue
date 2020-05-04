@@ -1,40 +1,49 @@
 <!-- 购物车列表展示的内容 -->
 <template>
   <div>
-    <ul>
-      <li class="li" v-for="(item,index) in $store.getters.cartListGet" :key="index">
-        <div class="cartItem">
-          <div class="cartImge">
-            <img :src="item.image" />
-          </div>
-          <div class="cartInfo">
-            <p class="title">{{item.title}}</p>
-            <p class="desc">{{item.desc}}</p>
-            <span class="price">{{item.newPrice}}</span>
-            <span class="counter">{{'x'+item.counter}}</span>
-          </div>
+    <div
+      class="li"
+      v-for="(item,index) in $store.getters.cartListGet"
+      :key="index"
+      @click="item.checked=!item.checked"
+    >
+      <div class="item-selector">
+        <checkButton :check="item.checked" />
+      </div>
+      <div class="cartItem">
+        <div class="cartImge">
+          <img :src="item.image" />
         </div>
-      </li>
-    </ul>
+        <div class="cartInfo">
+          <p class="title">{{item.title}}</p>
+          <p class="desc">{{item.desc}}</p>
+          <span class="price">{{item.newPrice}}</span>
+          <span class="counter">{{'x'+item.counter}}</span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import checkButton from "./checkButton";
 export default {
-  data () {
+  data() {
     return {
+      checked: false
     };
   },
-
-  // components: {},
-
-  // computed: {},
-
-  // mounted: {},
-
-  // methods: {}
-}
-
+  methods: {
+    itemChange() {
+      let result = this.cartList.filter(item => item.checked === true);
+      this.checkedAll =
+        result.length > 0 && result.length === this.cartList.length;
+    }
+  },
+  components: {
+    checkButton
+  }
+};
 </script>
 <style scoped>
 .cartItem {
@@ -63,12 +72,12 @@ export default {
 .title {
   font: 14px/2em "黑体";
 }
-.price{
+.price {
   color: red;
   position: relative;
   left: 4px;
 }
-.counter{
+.counter {
   position: absolute;
   right: 14px;
 }
