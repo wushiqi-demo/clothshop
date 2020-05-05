@@ -16,14 +16,13 @@ export default new Vuex.Store({
     addtoCartList(state, playLoad) {
       playLoad.checked = true //凡是进行状态更改的时候一定要在mutation中更改
       state.cartList.push(playLoad)
-      console.log(state.cartList);
     },
 
   },
   actions: {
     addtoCartList(context, playLoad) {
       ///在开发里面mutations只进行单一的操作
-      return new Promise((resolve, reject)=>{
+      return new Promise((resolve, reject) => {
         let oldProduct = context.state.cartList.find(item => item.iid == playLoad.iid)
         if (oldProduct) {
           context.commit('addCounter', oldProduct)
@@ -32,9 +31,9 @@ export default new Vuex.Store({
           context.commit('addtoCartList', playLoad)
           resolve('添加商品成功')
         }
-      }) 
-        
-      
+      })
+
+
     }
   },
   getters: {

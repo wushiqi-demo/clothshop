@@ -153,11 +153,7 @@ export default {
       // this.$store.cartList.push(product),这种做法不太推荐，在使用vuex时 ，使用mutations来改变state中的值
       // this.$store.dispatch("addtoCartList", product);
       this.addtoCartList(product).then(res => {
-        this.message = res;
-        this.show = true;
-        setTimeout(() => {
-          this.show = false;
-        }, 1500);
+       this.$toast.showToast(res)
       });
     }
   }
