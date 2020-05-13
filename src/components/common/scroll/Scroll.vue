@@ -38,7 +38,7 @@ export default {
       pullUpLoad: this.pullUpLoad
     });
     this.scroll.on("scroll", pops => {
-      this.$emit("backtopclick", pops);
+      this.$emit("contentScroll", pops);
       // console.log(pops);
     });
     this.scroll.on("pullingUp", () => {

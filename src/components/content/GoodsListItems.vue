@@ -34,7 +34,7 @@ export default {
       this.$bus.$emit("goodsItemsImageLoad"); //可以分别在首页，详情页处理，不用改动封装好的组件。让组件的实用性更强
     },
     detailClick() {
-      this.$router.push("/detail/" + this.goodsitems.iid);
+      this.$router.push("/detail/" + this.goodsitems.iid);//跳转的路由，加上参数
     }
   },
   computed: {
@@ -44,7 +44,8 @@ export default {
       } else {
         return this.goodsitems.show.img;
       }
-      // return this.goodsitems.image || this.goodsitems.show.img; //||是或的逻辑关系，如果前面的为空，去后面的值
+      // return this.goodsitems.image || this.goodsitem
+      s.show.img; //||是或的逻辑关系，如果前面的为空，去后面的值
     }
   }
 };

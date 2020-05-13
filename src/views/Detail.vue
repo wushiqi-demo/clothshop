@@ -11,7 +11,7 @@
       <detailComment :comment-info="commentInfo" ref="comment" />
       <GoodsList :goods="recommends" ref="recommends" />
     </scroll>
-    <detailButtonBar @addtoCart="addtoCart" />
+    <detailButtonBar @addtoCart="addtoCart"/>
     <backTop @click.native="backTopClick" v-show="isShow" />
     <Toast :message="message" :show="show" />
   </div>
@@ -78,6 +78,8 @@ export default {
     //拿出相关的详情页的数据
     getDetail(this.iid).then(res => {
       const data = res.result;
+      console.log(data);
+      
       this.topImage = data.itemInfo.topImages;
       // console.log(data);
       // 创建我们的店铺信息

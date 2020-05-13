@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <div class="NavBar">
+  <div class="NavBar ">
     <div class="left"><slot name="left"></slot></div>
     <div class="center"><slot name="center"></slot></div>
     <div class="right"><slot name="right"></slot></div>
@@ -28,6 +28,7 @@ export default {
 .NavBar{
   line-height: 44px;
   display: flex;
+  font-size: 14px;
 }
 .left{
   flex: 1;

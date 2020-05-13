@@ -6,18 +6,18 @@
       </NavBar>
     </div>
 
-      <tabControl
-        class="tabcontrol"
-        :title="['流行','新款','精选']"
-        @tabclick="tabcilck"
-        v-show="isTabFixed"
-        ref="tabcontrolcopy"
-      />
+    <tabControl
+      class="tabcontrol"
+      :title="['流行','新款','精选']"
+      @tabclick="tabcilck"
+      v-show="isTabFixed"
+      ref="tabcontrolcopy"
+    />
 
     <Bscroll
       class="bscroll"
       ref="scroll"
-      @backtopclick="contentScroll"
+      @contentScroll="contentScroll"
       :probeType="3"
       :pull-up-load="true"
       @pullUp="pullUp"
@@ -26,7 +26,7 @@
         <ChildSwiper :result="result" @swiperLoad="swiperLoad"></ChildSwiper>
       </div>
       <div>
-        <ChildRecommend :recommend="recommend" ></ChildRecommend>
+        <ChildRecommend :recommend="recommend"></ChildRecommend>
       </div>
       <div>
         <Feature />
@@ -75,10 +75,11 @@ export default {
       isShow: false,
       taCoffsetTop: 0,
       isTabFixed: false,
-      scrollY:0,
-      imgeLoadListener:null
+      scrollY: 0,
+      imgeLoadListener: null
     };
   },
+  inject: ["reload"],
   components: {
     NavBar,
     ChildSwiper,
@@ -87,7 +88,7 @@ export default {
     tabControl,
     GoodsList,
     Bscroll,
-    backTop
+    backTop,
     // // Swiper,
     // // SwiperItem
   },
@@ -97,35 +98,36 @@ export default {
     this.getHomeGoodsdata("new");
     this.getHomeGoodsdata("sell");
     // console.log( this.getHomeGoodsdata("sell"));
-    
   },
   activated() {
     // this.$refs.scroll.scrollTo(0,this.scrollY,0)
-          this.$refs.scroll.scrollTo(0, this.scrollY);
+    this.$refs.scroll.scrollTo(0, this.scrollY);
     // console.log(this.scrollY);
-    
-    this.$refs.scroll.refresh()
+
+    this.$refs.scroll.refresh();
+  },
+  updated() {
+    const reload = debounce(this.reload,150)
+    reload()
   },
   deactivated() {
-    this.scrollY = this.$refs.scroll.getScrollY()
+    this.scrollY = this.$refs.scroll.getScrollY();
     // console.log(this.scrollY);
     //离开时销毁发来的全局事件，当再次加入的时候，声明周期函数会再次处理发来的图片加载事件
-    this.$bus.$off("goodsItemsImageLoad", this.imgeLoadListener)
+    this.$bus.$off("goodsItemsImageLoad", this.imgeLoadListener);
   },
   mounted() {
     const refresh = debounce(this.$refs.scroll.refresh, 100); //防抖函数的调用
-    this.imgeLoadListener= () => {
+    this.imgeLoadListener = () => {
       refresh(); //刷新，防止图片异步加载过来的时候，滚动的长度不会刷新改变的问题
-    }
-    this.$bus.$on("goodsItemsImageLoad", this.imgeLoadListener );
+    };
+    this.$bus.$on("goodsItemsImageLoad", this.imgeLoadListener);
   },
   methods: {
     getHomeMultidata() {
       getHomeMultidata().then(res => {
         this.result = res.data.banner.list;
         this.recommend = res.data.recommend.list;
-        // console.log(this.result);
-        // console.log(this.recommend);
       });
     },
     getHomeGoodsdata(type) {
@@ -168,19 +170,18 @@ export default {
       this.isTabFixed = -pops.y > this.taCoffsetTop - 44;
     },
     pullUp() {
-      // console.log("上拉加载");
       this.getHomeGoodsdata(this.type); //让首页拿到下一页的数据
       this.$refs.scroll.finishPullUp(); //支持多次的上滑加载，如果不用finishPullUp()方法只加载一次
     },
     swiperLoad() {
       // console.log(this.$refs.tabControl.$el.offsetTop);
       this.taCoffsetTop = this.$refs.tabControl.$el.offsetTop;
-    },
+    }
   }
 };
 </script>
 <style scoped>
-.top{
+.top {
   margin-bottom: 44px;
 }
 .nav-home {
